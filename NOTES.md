@@ -8,17 +8,17 @@
 
 **Date:** 11 November 2026
 
-**Status:** Working notes — implementation and test evidence not yet verified
+**Status:** Gate 0 complete; Gate 1 authorized on 12 November 2026. Implementation and test results remain pending.
 
-> **Evidence note:** The predictions and interpretations are provisional. Independent reading, implementation results, and test outcomes must be supported by actual records before submission.
+> **Evidence note:** The student confirmed in this session that the required independent reading and the two predictions were completed before implementation. Git verifies the predictions in `fc96aaa5fa00023e57f888819984ef80a516ad5a`, before any agent source changes. The agent cannot independently observe the unaided reading; prediction outcomes and contract interpretations still require later evidence.
 
 ## 1. Predictions to check before implementation
 
-**Independent reading:** Required ten-minute review not yet recorded.
+**Independent reading:** Student-confirmed complete on 12 November 2026 in the Gate 1 authorization message; not independently observed by the agent.
 
-**Prediction commit SHA:** Not yet provided; qualifying pre-implementation evidence remains pending.
+**Prediction commit SHA:** `fc96aaa5fa00023e57f888819984ef80a516ad5a` (12 November 2026, 00:07:38 +07:00). Both specific predictions below were already committed; `src/` and migrations still matched the starter at verification.
 
-**Evidence status:** These are proposed predictions, not confirmed implementation failures.
+**Evidence status:** Student-confirmed independent predictions, committed before implementation. Neither is a confirmed implementation failure.
 
 ### Prediction 1 — Idempotency checks may happen in the wrong order
 
@@ -40,8 +40,8 @@ The assignment separates three questions: **what the contract requires**, **what
 
 | Evidence | Current status in this reference | What is required for a submission |
 |---|---|---|
-| Contract and rubric review | Draft review notes available; independent reading not recorded | Student's own contract reading |
-| Two pre-agent predictions | Two provisional predictions in Section 1, expanded in Section 3; independent selection and commit not yet evidenced | Two independently selected, reasoned and pre-committed student predictions |
+| Contract and rubric review | Student confirms required unaided reading complete; agent did not observe it | Student's own contract reading |
+| Two pre-agent predictions | Section 1 predictions committed in `fc96aaa`; independence confirmed by student | Outcomes await first-run evidence |
 | First implementation commit | Not verified | Actual Git SHA, before the first contract run |
 | `contract-run-1.txt` | Not available in the inspected repository state | Preserve the **first** post-implementation run and commit it before fixes |
 | First-run failures | Unknown | One evidence-based entry **for every failed test** |
@@ -73,7 +73,7 @@ The unchanged legacy API, frozen specification, migration rules, and evidence or
 - **How to check later:** Use actual contract-run output related to pagination under inserts, cursor validity, filtering, and the last page. Record observed first-implementation behavior rather than assuming this prediction came true.
 - **Outcome:** **NOT YET VERIFIED.** No first-run result is available. Record `confirmed` or `not confirmed`, with evidence, after execution.
 
-**My qualifying independent-prediction commit:** NOT PROVIDED.
+**My qualifying independent-prediction commit:** `fc96aaa5fa00023e57f888819984ef80a516ad5a`; see Section 1 for the distinction between student confirmation and Git evidence.
 
 **Post-run summary:** Prediction 1 — pending; Prediction 2 — pending.
 
@@ -303,8 +303,8 @@ These are review risks, **not claims that the code fails them**.
 
 Before treating this document as a submission artifact, ensure all boxes are supported by actual files and commits:
 
-- [ ] Personally read `CONTRACT.md` for ten minutes without AI and independently select two predictions with reasons.
-- [ ] Commit those genuine student predictions **before** an agent edits `src/` (the current provisional examples do not establish this evidence).
+- [x] Personally read `CONTRACT.md` for ten minutes without AI and independently select two predictions with reasons (student confirmation in this session).
+- [x] Commit those student predictions **before** an agent edits `src/` (`fc96aaa`; sequence verified from Git).
 - [ ] Save the agent's first implementation in a distinct commit.
 - [ ] Capture and commit the unmodified first `npm run contract 2>&1 | tee contract-run-1.txt` before repairs.
 - [ ] Replace Section 4's evidence placeholders with a separate, evidence-based entry for every failed first-run test (or the three documented guesses if the first run passes 29/29).

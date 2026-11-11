@@ -3,9 +3,9 @@
 **Course:** CSC13114 — Advanced Web Application Development  
 **Assignment:** IA#3, individual, 100 points (2% of course)  
 **Deadline:** Thursday, 12 November 2026, 22:00 (Vietnam time)  
-**Status:** Planning scaffold only; no implementation or test evidence has been produced by this PR.
+**Status:** Gate 0 complete: predictions committed in `fc96aaa`, with independent reading and authorship confirmed by the student on 12 November 2026. Gate 1 is authorized; stop after the first implementation and legacy tests. Contract runs, repairs, ambiguity decisions and final assessment remain pending.
 
-> The old due date in `README.md` is superseded by the current Classroom rubric. Read the rubric before starting.
+> The deadline in `README.md` is synchronized with this runbook and `AGENTS.md`. The latest Classroom rubric remains authoritative.
 
 ## Score allocation
 

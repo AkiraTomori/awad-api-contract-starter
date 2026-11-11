@@ -1,6 +1,6 @@
 # AI-LOG.md — IA#3 API Contract
 
-This is an honest, evolving record of AI assistance. The current entry covers **planning and docs-only scaffolding**, not a completed implementation. Log the exact coding prompt and **every** fix prompt when those actions actually occur. Do not invent Changed or Rejected decisions.
+This is an honest, evolving record of AI assistance. Entries distinguish historical planning, the student's confirmations, implementation and observed verification. Log the exact coding prompt and **every** fix prompt when those actions actually occur. Do not invent Changed or Rejected decisions.
 
 ## 2026-11-10 — Assignment planning and documentation scaffold
 
@@ -19,6 +19,32 @@ This is an honest, evolving record of AI assistance. The current entry covers **
 **By hand:** The student's required ten-minute unaided contract reading, selection of two predictions, and evidence-based judgments have **not** been performed or claimed by this PR. They are pending independent student work.
 
 **Files affected:** Documentation only. `src/`, `test/`, `CONTRACT.md`, and migrations remain untouched by this PR.
+
+## 2026-11-12 — Gate 0 verification and Gate 1 authorization
+
+**Tool:** Codex (model version not independently verified).
+
+**Exact initial implementation prompt (also the README prompt):**
+
+> Implement the `/v1` API in `src/v1.js` exactly as `CONTRACT.md` specifies, and the headers its section 5 requires on the legacy API in `src/app.js`. Put any new table in a new migration with a `down`. Do not read or edit anything under `test/`, and do not edit `CONTRACT.md`. Run `npm test` when you are done; it must stay green.
+
+**Initial response:** The agent stopped without changes because the notes marked Gate 0 pending. No tests were run in that response.
+
+**Exact follow-up authorization:**
+
+> Gate 0 has been completed. I independently reviewed CONTRACT.md, finalized two predictions in NOTES.md, and committed them before any implementation changes. Please verify the commit history and proceed with Gate 1 according to AGENTS.md and the README implementation instructions. Do not read test/ or modify CONTRACT.md. Stop after the first implementation and npm test; do not run contract tests or begin fixes yet.
+>
+> Mình đã đọc rồi, tự ghi rồi, đồng nhất tài liệu cho mình luôn và thực hiện như yêu cầu
+
+**Kept:** The student's two committed predictions; frozen contract; the requirement to stop before the first contract run.
+
+**Changed:** Synchronized stale Gate 0 status in `NOTES.md` and the runbook with the student's confirmation and the actual prediction commit. Corrected the obsolete README deadline using `AGENTS.md` and the runbook. These are current documentation corrections, not retrospective claims about what the planning PR accomplished.
+
+**Rejected:** None. No implementation proposal has yet been rejected by the student.
+
+**By hand:** The student states that the independent contract reading and predictions were completed before implementation. The agent cannot independently verify unaided activity.
+
+**Evidence:** Prediction commit `fc96aaa5fa00023e57f888819984ef80a516ad5a`, dated 12 November 2026 at 00:07:38 +07:00. Before implementation, `git log -- src/` showed only starter commit `6f7bf05`; the starter-to-HEAD diff for `src/` and migrations was empty. The existing `.gitignore` change belongs to the user and is excluded from agent commits. Gate 1 results will be recorded after execution.
 
 ## Future AI interaction entries — fill as work happens
 
