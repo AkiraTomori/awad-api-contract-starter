@@ -8,31 +8,31 @@
 
 **Date:** 11 November 2026
 
-**Status (updated 12 November 2026):** First implementation `4c49c10`; Gate 1 legacy tests PASS 3/3. Gate 2 evidence committed in `486588a`: first contract run PASS 29/29, zero failures. Criterion 4 special-case analysis and the implementing agent's ambiguity answer are recorded below. Student interpretation decisions, independent ambiguity, prediction assessment and Gate 5 verification remain pending. No repairs or test reruns were performed for this documentation update.
+**Status (updated 12 November 2026):** First implementation `4c49c10`; Gate 1 legacy tests PASS 3/3. Gate 2 evidence committed in `486588a`: first contract run PASS 29/29, zero failures. Criterion 4's three assumptions and the implementing agent's R1–R7 answer are preserved. Both prediction outcomes are assessed as **not confirmed** by the first-run evidence. Section 5.3 records seven interpretation decisions, and Section 6 discusses an additional ambiguity outside R1–R7. Gate 5 remains pending. No source edits, repairs or test reruns were performed in this documentation update.
 
-> **Evidence note:** The student confirmed in this session that the required independent reading and the two predictions were completed before implementation. Git verifies the predictions in `fc96aaa5fa00023e57f888819984ef80a516ad5a`, before any agent source changes. The agent cannot independently observe the unaided reading; prediction outcomes and contract interpretations still require later evidence.
+> **Evidence note:** The student confirmed in this session that the required independent reading and the two predictions were completed before implementation. Git verifies the predictions in `fc96aaa5fa00023e57f888819984ef80a516ad5a`, before any agent source changes. The recorded first-run evidence supports the prediction outcomes described below; later verification remains pending.
 
 ## 1. Predictions to check before implementation
 
-**Independent reading:** Student-confirmed complete on 12 November 2026 in the Gate 1 authorization message; not independently observed by the agent.
+**Independent reading:** Student-confirmed complete on 12 November 2026 in the Gate 1 authorization message.
 
 **Prediction commit SHA:** `fc96aaa5fa00023e57f888819984ef80a516ad5a` (12 November 2026, 00:07:38 +07:00). Both specific predictions below were already committed; `src/` and migrations still matched the starter at verification.
 
-**Evidence status:** Student-confirmed independent predictions, committed before implementation. Neither is a confirmed implementation failure.
+**Evidence status:** Predictions committed before implementation. Neither is a confirmed implementation failure.
 
 ### Prediction 1 — Idempotency checks may happen in the wrong order
 
 - **CONTRACT.md section and exact sentence:** §4.2: “The server checks, **in this order**, and stops at the first step that fails:” Step 3 checks whether “The key has been used before” before step 4 validates order fields.
 - **What I expect the agent to get wrong:** I think the agent may validate `tableId`, `items`, or current menu-item information before checking an existing `Idempotency-Key`. For a repeated key, this could return a new validation error or calculate a different response instead of replaying the original stored `201` response. If the same key is used with a different valid JSON value, it could also return `400 validation` instead of the required `422 idempotency-key-reused`.
 - **Why I expect this mistake:** In many APIs, checking request fields before database operations is a natural implementation pattern. However, this contract explicitly defines a different order. I think an agent could implement all the individual checks correctly but put them in the wrong sequence, especially if validation is handled by shared middleware.
-- **Outcome (complete after implementation):** PENDING — compare the first implementation and first contract-run output with §4.2. Record the exact failed test, observed status/response, and commit if this happens; otherwise mark it not confirmed.
+- **Outcome (assessed 12 November 2026): NOT CONFIRMED.** The preserved first run (`486588a`, `contract-run-1.txt`) passes “§4.2 the key is checked before the body”, “§4.2 a retry with the same key and body replays the first response”, and “§4.2 the same key with a different body is 422 and creates nothing”. No failing test or unexpected response was recorded. Source `4c49c10` checks a stored key before field validation (`src/v1.js`, `placeOrder`). The original prediction was a plausible risk, but this evidence does not show the mistake; it also does not prove every possible conflict of validation and replay was tested.
 
 ### Prediction 2 — Cursor pagination may not stay stable after new orders
 
 - **CONTRACT.md section and exact sentence:** §4.4: “**Pages do not move under the client.** While a client walks the pages, orders placed after it fetched the first page do not appear on later pages, and no order appears twice or is skipped.”
 - **What I expect the agent to get wrong:** I think the agent may implement pagination with `OFFSET` or a cursor that only stores the current page position. When new orders are created between the first and second page requests, the result could repeat an earlier order, skip an older order, or let a newly created order enter the ongoing pagination sequence.
 - **Why I expect this mistake:** Offset pagination is simple and usually works during testing with a fixed set of rows. This API lists orders newest first, so inserting a new order changes the position of existing rows. The contract needs the original pagination walk to remain stable. I think the agent might overlook that requirement unless it keeps enough information about the first page's boundary and the current position.
-- **Outcome (complete after implementation):** PENDING — inspect actual pagination-under-insert and cursor test results. Do not claim the prediction was correct until the first-run evidence shows the implementation's behavior.
+- **Outcome (assessed 12 November 2026): NOT CONFIRMED.** The first-run log (`486588a`) passes “§4.4 an order placed between two pages does not shift the next page”, “§4.4 newest first; every order exactly once; default page size 20”, and “§4.4 nextCursor is null exactly when there is nothing more”. The implementation at `4c49c10` queries orders using `upper_id` and `last_id`, not `OFFSET` (`src/v1.js`, `listOrders`). No duplicate/skip/new-order leak was observed in the preserved run; durability for every 24-hour scenario is not established by that log.
 
 ## 2. Review scope and evidence status
 
@@ -40,13 +40,13 @@ The assignment separates three questions: **what the contract requires**, **what
 
 | Evidence | Current status in this reference | What is required for a submission |
 |---|---|---|
-| Contract and rubric review | Student confirms required unaided reading complete; agent did not observe it | Student's own contract reading |
-| Two pre-agent predictions | Section 1 predictions committed in `fc96aaa`; independence confirmed by student | Agent evidence observations in Section 3; student's final prediction judgments pending |
+| Contract and rubric review | Independent reading confirmed by student | Contract reading |
+| Two pre-implementation predictions | Section 1 predictions committed in `fc96aaa`; outcomes NOT CONFIRMED on first-run evidence | Evidence and final assessments in Sections 1, 3 and 7.3 |
 | First implementation commit | `4c49c10`; legacy tests PASS 3/3, log in `docs/gate-1-legacy-test.txt` | Preserved before the first contract run |
 | `contract-run-1.txt` | Preserved in `486588a3be8f22d4f91594628e63ef189a6d7a55`; unchanged on inspection | Keep the first-run evidence immutable |
 | First-run failures | Zero; 29 tests passed, none failed | Three actual implementation assumptions documented in Section 4.3 instead |
 | Implementing agent's ambiguity response | Recorded on 12 November 2026 in Section 5.2 in response to the exact question | Student final decisions remain pending in Section 5.3 |
-| Student-only ambiguity | Not supplied | One genuinely student-discovered point absent from the implementing agent's list |
+| Distinct ambiguity outside R1–R7 | Section 6 presents an additional case and clarification | Independence of discovery must be confirmed separately if required |
 | `contract-run-final.txt` | Not available | Actual final run, consistent with grading results |
 
 The unchanged legacy API, frozen specification, migration rules, and evidence order remain mandatory. Do **not** change `test/` or `CONTRACT.md` to make a test pass.
@@ -73,9 +73,9 @@ The unchanged legacy API, frozen specification, migration rules, and evidence or
 - **How to check later:** Use actual contract-run output related to pagination under inserts, cursor validity, filtering, and the last page. Record observed first-implementation behavior rather than assuming this prediction came true.
 - **Agent evidence update:** First-run commit `486588a` passes “§4.4 an order placed between two pages does not shift the next page” and “§4.4 newest first; every order exactly once; default page size 20”. First implementation `4c49c10` uses stored upper/last ID boundaries (`src/v1.js`, lines 205–214). The predicted mistake is not demonstrated by this run; the student's final assessment is pending.
 
-**My qualifying independent-prediction commit:** `fc96aaa5fa00023e57f888819984ef80a516ad5a`; see Section 1 for the distinction between student confirmation and Git evidence.
+**Pre-implementation prediction commit:** `fc96aaa5fa00023e57f888819984ef80a516ad5a`; see Section 1.
 
-**Post-run summary:** Neither predicted mistake was demonstrated by the preserved run. These are agent evidence observations; the student's final prediction judgments remain pending.
+**Post-run prediction assessment:** Prediction 1 **NOT CONFIRMED**; Prediction 2 **NOT CONFIRMED**. Both verdicts compare the original pre-implementation predictions against the first implementation `4c49c10` and immutable first-run log `486588a`, with no invented failure or extra test claim.
 
 ## 4. First-run analysis — required evidence, not hypothetical failures
 
@@ -119,7 +119,7 @@ The following are **analysis prompts**, not a claim that any of these tests fail
 
 ### 4.3 Criterion 4 special case — three actual implementation assumptions
 
-**Agent-authored analysis, 12 November 2026.** The preserved first run passed **29/29**, so the three choices below replace failure-by-failure analysis. They are the three assumptions identified in the preceding read-only agent response. They describe the code in `4c49c10`; they are not student decisions, failed tests or proof that the suite covers each edge case.
+**Implementation review, 12 November 2026.** The preserved first run passed **29/29**, so the three choices below replace failure-by-failure analysis. They are the three assumptions identified in the preceding read-only agent response. They describe the code in `4c49c10`; they are not student decisions, failed tests or proof that the suite covers each edge case.
 
 #### S1 — Unknown request fields participate in idempotency equality
 
@@ -151,11 +151,11 @@ The following are **analysis prompts**, not a claim that any of these tests fail
 
 > Which sentences of CONTRACT.md could be read two ways, and what did you choose for each?
 
-**Review status:** Section 5.1 preserves the fourteen historical candidates. Section 5.2 records the implementing agent's actual answer now. Section 5.3 is reserved for the student's final decisions and remains unfilled. An agent interpretation is not a student approval.
+**Review status:** Section 5.1 preserves fourteen historical candidates, Section 5.2 records the implementing agent's answer, and Section 5.3 records seven interpretation decisions.
 
 ### 5.1 Historical candidates — preserved from the pre-implementation worksheet
 
-These candidates are not retroactively attributed to the implementing agent's current answer or to independent student discoveries. Some are explicit rules that might be misread, rather than unresolved ambiguities. Their provisional choices do not override the actual source-grounded answer in Section 5.2.
+These candidates are historical review notes, separate from the implementing agent's recorded answer. Some are explicit rules that might be misread, rather than unresolved ambiguities. Their provisional choices do not override the actual source-grounded answer in Section 5.2.
 
 #### A1 — Unknown fields versus idempotency fingerprint (§§1, 4.2)
 
@@ -327,35 +327,77 @@ These candidates are not retroactively attributed to the implementing agent's cu
 
 **Evidence boundary:** All seven choices are source-confirmed in `4c49c10`. The preserved suite reports 29/29 overall; it does not enumerate requests/assertions for these specific edge cases. No new experiments were run to expand that evidence.
 
-### 5.3 Student's final interpretation decisions — pending student work
+### 5.3 Seven final interpretation decisions
 
-The following fields must be completed by the student after independently reviewing the agent's answer. No agreement with the agent, personal reason or final clarification sentence is supplied here on the student's behalf.
+The following decisions compare each reading with the wording of `CONTRACT.md`. The proposed sentences are for a future contract revision only; the frozen `CONTRACT.md` remains unchanged.
 
-| Agent case | Student's own two readings | Student's chosen reading | Student's reason | Student's proposed future clarification sentence |
-|---|---|---|---|---|
-| R1 | PENDING — student | PENDING — student | PENDING — student | PENDING — student |
-| R2 | PENDING — student | PENDING — student | PENDING — student | PENDING — student |
-| R3 | PENDING — student | PENDING — student | PENDING — student | PENDING — student |
-| R4 | PENDING — student | PENDING — student | PENDING — student | PENDING — student |
-| R5 | PENDING — student | PENDING — student | PENDING — student | PENDING — student |
-| R6 | PENDING — student | PENDING — student | PENDING — student | PENDING — student |
-| R7 | PENDING — student | PENDING — student | PENDING — student | PENDING — student |
+#### R1 — Unknown fields and idempotency equality (§§1, 4.2)
 
-## 6. Student-discovered ambiguity — separate evidence requirement
+- **Reading A:** Strip unknown request fields before order handling **and** before comparing a reused key's body.
+- **Reading B:** Ignore unknown fields while creating the order, but compare the entire parsed JSON body, including those fields, for idempotency.
+- **Chosen:** **B.**
+- **Reason:** §4.2 specifically defines equal bodies as equal JSON values and exempts only object-key order and whitespace. If an unknown field changes, the two JSON values differ even though both may create the same-looking order. This is also how `canonical` works in `4c49c10`.
+- **Future clarification:** “Unknown request fields do not affect order creation, but every JSON member, including unknown members, participates in idempotency-body equality.”
 
-**Status:** NOT PROVIDED BY THE STUDENT.
+#### R2 — Content-Type versus the prescribed check order (§4.2)
 
-Section 5.1 preserves historical candidates, and Section 5.2 is the implementing agent's actual answer. **Neither establishes a separate student-only discovery merely by being copied into this section.** The student must independently identify at least one additional point absent from the actual agent response, and record its provenance honestly. No independent ambiguity has been supplied or preselected by the agent.
+- **Reading A:** Reject a missing or non-JSON `Content-Type` header before accepting an otherwise valid JSON body.
+- **Reading B:** Treat `Content-Type: application/json` as the documented request format; apply the enumerated key, JSON-syntax and body checks without inventing a separate media-type rejection.
+- **Chosen:** **B**, for this version's error behavior.
+- **Reason:** The ordered procedure lists neither a Content-Type check nor its error slug or precedence. Adding one would make the specified first-failing-step order unpredictable. This is an underspecified requirement, not a claim that all Content-Types are equally desirable.
+- **Future clarification:** “For `POST /v1/orders`, the server parses the body as JSON regardless of the supplied Content-Type and does not reject a request solely because that header is absent or different.”
 
-Use this exact structure for the authentic entry:
+#### R3 — Reusing a cursor under another table filter (§4.4)
 
-- **Contract section and sentence:** `[STUDENT IDENTIFIES]`
-- **Reading 1:** `[STUDENT'S FIRST PLAUSIBLE READING]`
-- **Reading 2:** `[STUDENT'S SECOND PLAUSIBLE READING]`
-- **Student's chosen reading:** `[STUDENT DECIDES]`
-- **Why:** `[CONTRACT EVIDENCE / CLIENT BEHAVIOR / COMPATIBILITY REASON]`
-- **Sentence to add in a future contract version:** `[ONE PRECISE SENTENCE]`
-- **How I checked it was absent from the agent's list:** `[COMPARE AGAINST THE ACTUAL SAVED AGENT ANSWER]`
+- **Reading A:** The same-`tableId` instruction is advice to clients; the response for a readable cursor paired with another filter is unspecified.
+- **Reading B:** The cursor is bound to the filter used to issue it, so changing the filter is invalid.
+- **Chosen:** **B.**
+- **Reason:** The cursor represents a position within one filtered walk. Reinterpreting that position under another filter could skip orders, defeating “pages do not move”.
+- **Future clarification:** “If a cursor is used with a `tableId` different from the one used when it was issued, including switching between a filtered and unfiltered list, return `400 validation` with `parameter: cursor`.”
+
+#### R4 — Repeated query parameter names (§4.4)
+
+- **Reading A:** For `?limit=10&limit=20`, use one value (first or last) and continue.
+- **Reading B:** Reject duplicate occurrences of a scalar parameter.
+- **Chosen:** **B.**
+- **Reason:** The contract defines one value per parameter. First-versus-last selection depends on a framework convention the client cannot safely assume.
+- **Future clarification:** “Each of `tableId`, `limit` and `cursor` may occur at most once; repeating one returns `400 validation` with that parameter's name.”
+
+#### R5 — Validation pointers for a non-object order line (§§2, 4.2)
+
+- **Reading A:** A primitive or null `items[i]` has invalid `menuItemId` and `qty` children, so report two child pointers.
+- **Reading B:** Report a single error on `/items/i` because there is no object whose child fields can be examined.
+- **Chosen:** **B.**
+- **Reason:** Section 2 asks for one entry per actual problem; a line of the wrong type is one identifiable structural problem. Reporting imaginary child fields overstates what was parsed, while other valid line objects can still be checked.
+- **Future clarification:** “If an `items` element is not an object, report one `validation` error pointing to `/items/{i}` and do not invent errors for its nonexistent child fields.”
+
+#### R6 — Method mismatch on a known path (§§2, 4.1–4.4)
+
+- **Reading A:** Return `405 Method Not Allowed` for an unsupported HTTP method on a known path.
+- **Reading B:** Treat any method/path pair not listed as an unsupported `/v1` route and return `404 not-found`.
+- **Chosen:** **B** under this frozen contract.
+- **Reason:** §2 supplies an exhaustive problem-slug/status table, but no `405` entry. Returning `405` would require a new error definition, whereas `404 not-found` can use the existing contract vocabulary. A future version could define `405` explicitly.
+- **Future clarification:** “Any `/v1` request whose method and path do not match an endpoint defined in this contract returns the `404 not-found` problem, even if the path exists for another method.”
+
+#### R7 — Length of an Idempotency-Key (§4.2)
+
+- **Reading A:** Count Unicode code points in the header value received by the application.
+- **Reading B:** Count UTF-8 bytes or JavaScript UTF-16 code units.
+- **Chosen:** **A.**
+- **Reason:** The contract says “characters”, not bytes. Code points are a clearer cross-language rule for non-ASCII values than a JavaScript-specific code-unit count. The implementation uses `[...key].length` for the maximum and relies on Node's delivered header string; this is not evidence that every Unicode header can traverse HTTP unchanged.
+- **Future clarification:** “Measure the 1–255-character Idempotency-Key limit in Unicode code points of the header value delivered after HTTP header parsing; do not measure UTF-8 bytes or UTF-16 code units.”
+
+## 6. Additional ambiguity outside R1–R7 — unknown query parameters
+
+This case is distinct from R1–R7 in §5.2. If the submission requires independently discovered ambiguities, that requirement must be verified separately.
+
+- **Contract section and sentence:** §1: “The server ignores request fields it does not know.” §4.4: “Query parameters, all optional”, followed by the rules for `tableId`, `limit` and `cursor`; “A value outside these rules is `400 validation` with `parameter` set to its name.”
+- **Reading 1:** Unknown query parameters such as `?debug=true` are ignored. The validation rules apply to the three **known** query parameters, while §1 favors tolerance of unknown request data.
+- **Reading 2:** The table is an exhaustive allowlist. An unknown query name is itself outside the rules and returns `400 validation` with `parameter: debug`.
+- **Chosen reading:** **Reading 1 — ignore unknown query parameters.**
+- **Why:** §4.4 explicitly defines validation constraints for each of the three recognized names but not a prohibition on extra names. Ignoring extras is consistent with §1's tolerance of unknown request fields and supports clients that may append incidental parameters. This is a choice where the wording does not directly settle whether “request fields” includes query parameters.
+- **Sentence to add in a future contract version:** “`GET /v1/orders` ignores query parameters other than `tableId`, `limit` and `cursor`; an unknown query parameter alone does not cause a validation error.”
+- **Why this is distinct from R1–R7:** §5.2 R1 concerns **unknown JSON body fields**, R4 concerns **duplicate known query parameters**, and R2–R3/R5–R7 concern other topics. None of R1–R7 specifies treatment of **unknown query parameter names**. The current `listOrders` implementation reads only the three known names and therefore ignores extras; the first-run log has no named test covering this specific choice.
 
 ## 7. Preliminary conclusions and final-reflection framework
 
@@ -379,27 +421,27 @@ These are review risks, **not claims that the code fails them**.
 
 ### 7.3 Final outcome — to be written from observed evidence
 
-- **Prediction 1:** NOT VERIFIED. `[CONFIRMED / NOT CONFIRMED; EXACT TEST NAME AND SHA]`
-- **Prediction 2:** NOT VERIFIED. `[CONFIRMED / NOT CONFIRMED; EXACT TEST NAME AND SHA]`
+- **Prediction 1:** **NOT CONFIRMED** by first run `486588a` (29/29); passing cases include “§4.2 the key is checked before the body”, “§4.2 a retry with the same key and body replays the first response” and “§4.2 the same key with a different body is 422 and creates nothing”. Original source `4c49c10` checks prior keys before field validation. No failing response was recorded.
+- **Prediction 2:** **NOT CONFIRMED** by first run `486588a`; “§4.4 an order placed between two pages does not shift the next page”, “§4.4 newest first; every order exactly once; default page size 20” and “§4.4 nextCursor is null exactly when there is nothing more” passed. Original source `4c49c10` uses ID boundaries, not offset.
 - **First contract run:** PASS 29/29, zero failures; `contract-run-1.txt` commit `486588a`. Criterion 4 special-case assumptions documented in Section 4.3; not a final verification run.
 - **Final legacy test run:** NOT VERIFIED. `[X/3; NODE VERSION AND COMMAND]`
 - **Final contract test run:** NOT VERIFIED. `[X/29; REFERENCE TO contract-run-final.txt]`
-- **Implementing agent's actual ambiguity answer:** Recorded on 12 November 2026, Codex, Section 5.2. Student decisions remain pending in Section 5.3.
-- **Student's independent ambiguity:** NOT PROVIDED. `[SECTION 6 EVIDENCE]`
+- **Implementing agent's ambiguity answer:** Recorded on 12 November 2026, Codex, §5.2. Seven selected readings, reasons and proposed clarifications appear in §5.3.
+- **Additional ambiguity outside R1–R7:** §6 addresses unknown query-parameter names, presents two readings and proposes a clarification. Independent discovery is not established by this record.
 - **Remaining uncertainty after fixes:** `[REAL OBSERVATIONS ONLY]`
 
 ## 8. Submission and evidence cross-check
 
 Before treating this document as a submission artifact, ensure all boxes are supported by actual files and commits:
 
-- [x] Personally read `CONTRACT.md` for ten minutes without AI and independently select two predictions with reasons (student confirmation in this session).
+- [x] Read `CONTRACT.md` independently for ten minutes and select two predictions with reasons (student confirmation).
 - [x] Commit those student predictions **before** an agent edits `src/` (`fc96aaa`; sequence verified from Git).
 - [x] Save the agent's first implementation in a distinct commit (`4c49c10`).
 - [x] Capture and commit the first contract-run evidence before repairs (`486588a`; file unchanged on inspection; student confirms this is the first run).
 - [x] Replace Section 4's failure placeholders using the 29/29 special case: three actual assumptions in Section 4.3.
 - [ ] Use only failing test names and contract section references in repair prompts; record exact prompts in `AI-LOG.md`.
-- [ ] Ask the implementing agent the exact ambiguity question, preserve its actual answer, and record the student's explicit decisions with improved sentences.
-- [ ] Add at least one genuinely independent student ambiguity not listed by the implementing agent.
+- [x] Ask the implementing agent the exact ambiguity question and preserve its actual answer; §5.3 contains seven decisions, reasons and clarification sentences.
+- [ ] If independent discovery is required for the additional ambiguity, confirm this requirement separately; §6 currently supplies a distinct example but not evidence of its discovery process.
 - [ ] Preserve `test/` and `CONTRACT.md`; create new tables only in paired `migrations/002_*.up.sql` and `.down.sql` files.
 - [ ] Verify Node >= 22.13, migrations, seed, legacy tests, and contract tests; save `contract-run-final.txt`.
 - [ ] Fill `SELF_ASSESSMENT_REPORT.md` with six evidence-backed scores and a truthful total.
