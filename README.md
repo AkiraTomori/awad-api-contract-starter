@@ -8,9 +8,11 @@ built-in `node:sqlite`.
 
 The starter provided only its **legacy** API (`/menu…`). The first `/v1`
 implementation is now preserved in commit `4c49c10`; Gate 1 legacy tests pass
-3/3 on Node v26.6.0 (`docs/gate-1-legacy-test.txt`). Contract tests have not
-been run for this implementation; the next checkpoint is the student's Gate 2
-first-run capture. The contract for the versioned API is:
+3/3 on Node v26.6.0 (`docs/gate-1-legacy-test.txt`). The preserved first contract
+run passed 29/29 with zero failures (`contract-run-1.txt`, commit `486588a`).
+`NOTES.md` records the criterion 4 special case and the agent's ambiguity answer;
+student interpretation decisions, an independent ambiguity and final verification
+remain pending. The contract for the versioned API is:
 **[`CONTRACT.md`](CONTRACT.md)**. You do not write the implementation by hand —
 your agent does, from the contract. Then `npm run contract` decides whether it
 did what the contract says.

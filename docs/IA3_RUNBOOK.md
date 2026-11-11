@@ -3,7 +3,7 @@
 **Course:** CSC13114 — Advanced Web Application Development  
 **Assignment:** IA#3, individual, 100 points (2% of course)  
 **Deadline:** Thursday, 12 November 2026, 22:00 (Vietnam time)  
-**Status:** Gate 0 complete: predictions committed in `fc96aaa`, with independent reading and authorship confirmed by the student on 12 November 2026. Gate 1 complete: first implementation `4c49c10`; `npm test` PASS 3/3 on Node v26.6.0, captured in `docs/gate-1-legacy-test.txt`. Stopped before Gate 2. Contract runs, repairs, ambiguity decisions and final assessment remain pending.
+**Status:** Gate 0 predictions `fc96aaa`, student-confirmed independent; Gate 1 implementation `4c49c10`, legacy PASS 3/3 on Node v26.6.0 (`docs/gate-1-legacy-test.txt`). Gate 2 first run preserved in `486588a`: contract PASS 29/29, zero failures. Criterion 4's three-assumption special case and the actual agent ambiguity answer are recorded in `NOTES.md` Sections 4.3 and 5.2. No fixes or test reruns were performed during this documentation update. Student final interpretations, independent ambiguity and Gate 5 verification/assessment remain pending.
 
 > The deadline in `README.md` is synchronized with this runbook and `AGENTS.md`. The latest Classroom rubric remains authoritative.
 

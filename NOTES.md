@@ -8,7 +8,7 @@
 
 **Date:** 11 November 2026
 
-**Status:** Gate 0 complete; Gate 1 first implementation committed as `4c49c10`, with legacy tests PASS 3/3 on Node v26.6.0. Stopped before Gate 2; contract behavior and prediction outcomes remain unverified.
+**Status (updated 12 November 2026):** First implementation `4c49c10`; Gate 1 legacy tests PASS 3/3. Gate 2 evidence committed in `486588a`: first contract run PASS 29/29, zero failures. Criterion 4 special-case analysis and the implementing agent's ambiguity answer are recorded below. Student interpretation decisions, independent ambiguity, prediction assessment and Gate 5 verification remain pending. No repairs or test reruns were performed for this documentation update.
 
 > **Evidence note:** The student confirmed in this session that the required independent reading and the two predictions were completed before implementation. Git verifies the predictions in `fc96aaa5fa00023e57f888819984ef80a516ad5a`, before any agent source changes. The agent cannot independently observe the unaided reading; prediction outcomes and contract interpretations still require later evidence.
 
@@ -41,11 +41,11 @@ The assignment separates three questions: **what the contract requires**, **what
 | Evidence | Current status in this reference | What is required for a submission |
 |---|---|---|
 | Contract and rubric review | Student confirms required unaided reading complete; agent did not observe it | Student's own contract reading |
-| Two pre-agent predictions | Section 1 predictions committed in `fc96aaa`; independence confirmed by student | Outcomes await first-run evidence |
+| Two pre-agent predictions | Section 1 predictions committed in `fc96aaa`; independence confirmed by student | Agent evidence observations in Section 3; student's final prediction judgments pending |
 | First implementation commit | `4c49c10`; legacy tests PASS 3/3, log in `docs/gate-1-legacy-test.txt` | Preserved before the first contract run |
-| `contract-run-1.txt` | Not available in the inspected repository state | Preserve the **first** post-implementation run and commit it before fixes |
-| First-run failures | Unknown | One evidence-based entry **for every failed test** |
-| Implementing agent's ambiguity response | Not yet observed | Ask the exact rubric question and preserve the actual answer |
+| `contract-run-1.txt` | Preserved in `486588a3be8f22d4f91594628e63ef189a6d7a55`; unchanged on inspection | Keep the first-run evidence immutable |
+| First-run failures | Zero; 29 tests passed, none failed | Three actual implementation assumptions documented in Section 4.3 instead |
+| Implementing agent's ambiguity response | Recorded on 12 November 2026 in Section 5.2 in response to the exact question | Student final decisions remain pending in Section 5.3 |
 | Student-only ambiguity | Not supplied | One genuinely student-discovered point absent from the implementing agent's list |
 | `contract-run-final.txt` | Not available | Actual final run, consistent with grading results |
 
@@ -61,7 +61,7 @@ The unchanged legacy API, frozen specification, migration rules, and evidence or
 - **Expected observable mistake:** A valid-JSON retry with an existing key is revalidated or recalculated instead of returning the original stored `201` body and `Location`. Another possible mistake is allowing an invalid new body to bypass the required `422 idempotency-key-reused` when the same key was already used with different JSON content.
 - **Required behavior:** First check the key's presence/length, then JSON syntax, then an existing-key record. A successful identical replay returns **the original** `201` response plus `Idempotent-Replayed: true`, without placing another order. A different JSON body with the same stored key returns `422 idempotency-key-reused`. New keys continue through validation, menu-item lookup, and creation.
 - **How to check later:** Inspect actual first-run test names/output involving duplicate keys, replay, body differences, and error precedence. Check the first implementation's observed behavior without reading or editing `test/`.
-- **Outcome:** **NOT YET VERIFIED.** No first-run result is available. Record `confirmed` or `not confirmed`, the exact test name, and the implementation commit after execution.
+- **Agent evidence update:** First-run commit `486588a` reports no failures, including the key-before-body and replay tests. In first implementation `4c49c10`, the stored-key check precedes field validation (`src/v1.js`, lines 123–128). The predicted mistake is not demonstrated by this run; the student's final assessment is pending. The output does not establish coverage of every combination of invalid fields and used keys.
 
 ### Prediction 2 — Stable cursor pagination (`CONTRACT.md` §4.4)
 
@@ -71,37 +71,33 @@ The unchanged legacy API, frozen specification, migration rules, and evidence or
 - **Expected observable mistake:** An order created between page requests appears in a later page, or an earlier order is repeated or skipped because the dataset shifted. Another likely mistake is returning a non-null cursor for an empty final page.
 - **Required behavior:** Return orders in descending ID order. A cursor must carry enough information to enforce the original walk's upper boundary and position, and it must work with the original filter. `nextCursor` is `null` exactly when no later page has entries; it must never lead to an empty page.
 - **How to check later:** Use actual contract-run output related to pagination under inserts, cursor validity, filtering, and the last page. Record observed first-implementation behavior rather than assuming this prediction came true.
-- **Outcome:** **NOT YET VERIFIED.** No first-run result is available. Record `confirmed` or `not confirmed`, with evidence, after execution.
+- **Agent evidence update:** First-run commit `486588a` passes “§4.4 an order placed between two pages does not shift the next page” and “§4.4 newest first; every order exactly once; default page size 20”. First implementation `4c49c10` uses stored upper/last ID boundaries (`src/v1.js`, lines 205–214). The predicted mistake is not demonstrated by this run; the student's final assessment is pending.
 
 **My qualifying independent-prediction commit:** `fc96aaa5fa00023e57f888819984ef80a516ad5a`; see Section 1 for the distinction between student confirmation and Git evidence.
 
-**Post-run summary:** Prediction 1 — pending; Prediction 2 — pending.
+**Post-run summary:** Neither predicted mistake was demonstrated by the preserved run. These are agent evidence observations; the student's final prediction judgments remain pending.
 
 ## 4. First-run analysis — required evidence, not hypothetical failures
 
-**First implementation commit:** `4c49c10` — `feat: initial agent implementation of v1`. Gate 1 ran only `npm test`: PASS 3/3 on Node v26.6.0; output preserved in `docs/gate-1-legacy-test.txt`. No contract tests or subsequent source fixes were run. Migration up/down execution was not separately verified during Gate 1.
+**First implementation commit:** `4c49c10` — `feat: initial agent implementation of v1`. During Gate 1 the agent ran only `npm test`: PASS 3/3 on Node v26.6.0; output preserved in `docs/gate-1-legacy-test.txt`. The student's later Gate 2 contract run is recorded below; no source fixes followed. Migration up/down execution was not separately verified during Gate 1.
 
-**First-run evidence commit:** NOT PROVIDED
+**First-run evidence commit:** `486588a3be8f22d4f91594628e63ef189a6d7a55` — `test: preserve first contract run before fixes`, 12 November 2026, 00:23:00 +07:00; follows first implementation commit `4c49c10`.
 
-**Observed result:** UNKNOWN / 29 contract tests
+**Observed result:** 29 tests, 7 suites, 29 passed, 0 failed, 0 cancelled, 0 skipped, 0 todo; duration 402.747625 ms. This is the preserved run's result, not a rerun or a final verification claim. The log itself does not record the Node version used for that run.
 
-**Command required:** `npm run contract 2>&1 | tee contract-run-1.txt`
+**Capture command specified for Gate 2:** `npm run contract 2>&1 | tee contract-run-1.txt` (not executed again during analysis or this documentation update).
 
-At the time this reference was prepared, the first post-implementation run was not available. **It would be inaccurate to invent failed test names, pass counts, response bodies, repair commits, or outcomes.** Once `contract-run-1.txt` exists, make exactly one entry per failed test, including multiple tests about the same contract rule.
+The earlier scaffold predated the first run. The actual preserved output is now available in [contract-run-1.txt](contract-run-1.txt). Read-only comparison verified that it matches its evidence commit and that `src/` and migrations still match `4c49c10`. There are no failing tests to diagnose. Criterion 4 therefore uses Section 4.3's three actual implementation assumptions, rather than invented failure records.
 
-### 4.1 Failure record — repeat for every actual failure
+### 4.1 Failure analysis — not applicable to this first run
 
-| Required field | Evidence to enter |
+| Required field | Actual evidence |
 |---|---|
-| **Exact failing test name** | `[COPY FROM THE REAL FIRST-RUN OUTPUT]` |
-| **Relevant contract section and rule** | `[SECTION + SHORT QUOTATION OR PRECISE PARAPHRASE]` |
-| **Required behavior** | `[SPECIFIC STATUS / BODY / HEADER / SIDE EFFECT]` |
-| **Observed first-implementation behavior** | `[ACTUAL VS EXPECTED FROM THE OUTPUT AND IMPLEMENTATION]` |
-| **Why they differed** | `[ROOT CAUSE OR SUPPORTED EXPLANATION]` |
-| **Two possible readings, if any** | `[A AND B; OTHERWISE “NOT AMBIGUOUS”]` |
-| **Clearer sentence proposed for the contract** | `[ONE TESTABLE SENTENCE; OR “NOT NEEDED”]` |
-| **Repair prompt / commit** | `[EXACT PROMPT IN AI-LOG + REAL SHA]` |
-| **Outcome after fix** | `[OBSERVED PASS/FAIL; ACTUAL FINAL LOG]` |
+| **Exact failing test name** | None; zero failures |
+| **Relevant failure-specific contract section / required behavior** | Not applicable; no failure diagnostic exists |
+| **Observed difference / root cause** | None demonstrated by the preserved run |
+| **Failure-specific ambiguity / clarification** | Not applicable; actual interpretation choices are documented separately below |
+| **Repair prompt / commit / post-fix outcome** | None; no repairs or post-fix run |
 
 ### 4.2 Contract coverage checklist for classifying actual failures
 
@@ -121,25 +117,47 @@ The following are **analysis prompts**, not a claim that any of these tests fail
 | API separation | §5 | `/v1` problem details vs. unchanged legacy JSON error structure |
 | Legacy lifecycle | §5 | `Deprecation` and `Sunset` even on legacy errors; successor `Link` for successful `GET /menu/{id}` |
 
-### 4.3 If the first agent implementation passes 29/29
+### 4.3 Criterion 4 special case — three actual implementation assumptions
 
-Write the **actual** observed `29/29` result and explain three real assumptions the implementation agent made. Possible topics to ask about (not assumed agent answers):
+**Agent-authored analysis, 12 November 2026.** The preserved first run passed **29/29**, so the three choices below replace failure-by-failure analysis. They are the three assumptions identified in the preceding read-only agent response. They describe the code in `4c49c10`; they are not student decisions, failed tests or proof that the suite covers each edge case.
 
-1. How was JSON-value equality implemented for idempotency, including nested objects and unknown fields?
-2. What information does the pagination cursor store to prevent page movement under new inserts?
-3. How are non-`201` outcomes excluded from the persistent idempotency record?
+#### S1 — Unknown request fields participate in idempotency equality
 
-For each, cite the relevant contract rule, the agent's actual choice, why another choice was plausible, and whether evidence supports that choice.
+- **Contract reference:** §1, “The server ignores request fields it does not know”; §4.2, “Two bodies are the same when they are equal as JSON values”, with only key order and whitespace excluded from differences.
+- **Actual choice:** Ignore extra fields when constructing the order, but include all parsed fields in the fingerprint. `canonical` sorts object keys recursively and preserves arrays; `placeOrder` hashes that canonical value before order validation. A changed unknown field under a completed key returns `422 idempotency-key-reused`.
+- **Implementation evidence:** [src/v1.js](src/v1.js), `canonical` (lines 28–34), fingerprinting (line 123), conflict response (lines 93–100), order construction (lines 140–160).
+- **Why another reading was plausible:** “Ignores” could be read as removing unknown fields before every processing step, including fingerprinting. The agent chose the more specific whole-JSON equality rule in §4.2.
+- **Evidence limit:** The first-run test `§4.2 "the same body" means the same JSON value: key order and whitespace do not matter` passed, as did changed-body rejection. The log does not reveal whether unknown-field changes or arbitrary nested values were exercised. This edge-case choice is source-confirmed, not individually proven by the test summary.
 
-## 5. Wording that could be interpreted two ways — my review worksheet
+#### S2 — Parse JSON without a separate Content-Type rejection
 
-**Question from the rubric to ask the implementing agent later, exactly:**
+- **Contract reference:** §4.2 lists `Content-Type: application/json` among request headers, but its numbered algorithm checks key, JSON syntax, previous key, fields, menu items and creation without a separate media-type check.
+- **Actual choice:** With a valid key, attempt `JSON.parse` on the body regardless of Content-Type. Missing or different Content-Type alone does not reject otherwise valid JSON; malformed JSON returns `400 invalid-json` after the key check.
+- **Implementation evidence:** [src/v1.js](src/v1.js), `placeOrder` (lines 103–128); there is no Content-Type inspection in that path or its dispatch in `src/app.js`.
+- **Why another reading was plausible:** The stated header could be mandatory, but the contract does not assign a rejection status/type or a position for that rejection in its ordered checks. The agent avoided inventing another failure step.
+- **Evidence limit:** The malformed-JSON and key-before-body tests passed. No test name in the preserved output establishes acceptance or rejection of missing/different Content-Type. This behavior is source-confirmed only.
+
+#### S3 — A cursor with a different table filter is a validation error
+
+- **Contract reference:** §4.4 says “Use a cursor with the same `tableId` it came from”, and specifies `400 validation` with `parameter: cursor` when a cursor cannot be read.
+- **Actual choice:** Store the original `table_id` with each random opaque cursor. If its stored filter differs from the request's filter, including changing between all tables and one table, return `400 validation` naming `cursor`.
+- **Implementation evidence:** [src/v1.js](src/v1.js), cursor lookup/filter check (lines 194–201), stored page boundaries/filter (lines 205–214); [migrations/002_v1_state.up.sql](migrations/002_v1_state.up.sql), `v1_cursors` (lines 13–19).
+- **Why another reading was plausible:** The same-filter sentence could be only a client obligation, leaving server behavior on a readable mismatched cursor unspecified. The agent chose to reject it to protect the meaning of the original traversal.
+- **Evidence limit:** The unreadable-cursor, insertion-stability and cross-instance cursor tests passed. Their names do not establish that a readable cursor with a mismatched filter was tested. The mismatch response is source-confirmed only.
+
+## 5. Contract interpretations — agent answer and separate student worksheet
+
+**Exact question answered by the implementing agent on 12 November 2026:**
 
 > Which sentences of CONTRACT.md could be read two ways, and what did you choose for each?
 
-**Review status:** The cases below are **provisional interpretations**, **not** a quotation or summary of the implementing agent's later answer. They are proposals for discussion. The student should record the implementing agent's real answer separately, make their own decisions, and then compare them against these candidates.
+**Review status:** Section 5.1 preserves the fourteen historical candidates. Section 5.2 records the implementing agent's actual answer now. Section 5.3 is reserved for the student's final decisions and remains unfilled. An agent interpretation is not a student approval.
 
-### A1 — Unknown fields versus idempotency fingerprint (§§1, 4.2)
+### 5.1 Historical candidates — preserved from the pre-implementation worksheet
+
+These candidates are not retroactively attributed to the implementing agent's current answer or to independent student discoveries. Some are explicit rules that might be misread, rather than unresolved ambiguities. Their provisional choices do not override the actual source-grounded answer in Section 5.2.
+
+#### A1 — Unknown fields versus idempotency fingerprint (§§1, 4.2)
 
 - **Reading A:** Unknown request fields are ignored both when placing an order and when deciding whether two keyed requests have the same body.
 - **Reading B:** Unknown fields do not influence order creation, but they still count as part of the JSON body when checking for a different request under the same key.
@@ -147,7 +165,7 @@ For each, cite the relevant contract rule, the agent's actual choice, why anothe
 - **Why:** Ignoring an extra field for business processing is separate from treating two raw client requests as equivalent. A server should not silently redefine the stated fingerprint rule.
 - **Sentence to add to a future contract revision:** “Idempotency body comparison includes every parsed JSON field, including fields otherwise ignored by order creation; only object-member order and insignificant JSON whitespace are ignored.”
 
-### A2 — Missing or non-JSON Content-Type (§4.2)
+#### A2 — Missing or non-JSON Content-Type (§4.2)
 
 - **Reading A:** The stated `Content-Type: application/json` header is required; missing, different, or parameterized values must be rejected.
 - **Reading B:** The server may accept a parseable JSON body with a compatible media type such as `application/json; charset=utf-8`; the numbered validation sequence does not specify a separate Content-Type rejection step.
@@ -156,7 +174,7 @@ For each, cite the relevant contract rule, the agent's actual choice, why anothe
 - **Sentence to add:** “A POST request may use `application/json` with an optional UTF-8 charset parameter; if a JSON body is supplied without that media type, the server [explicitly define accept/reject and the error type].”
 - **Decision needing specification-owner confirmation:** The bracketed behavior cannot be resolved definitively from the current text.
 
-### A3 — Retry with an old key and an invalid body (§4.2)
+#### A3 — Retry with an old key and an invalid body (§4.2)
 
 - **Reading A:** Validate all order fields before determining whether a used key has a replay or conflict.
 - **Reading B:** For syntactically valid JSON, check the used key and body equality before field validation.
@@ -164,7 +182,7 @@ For each, cite the relevant contract rule, the agent's actual choice, why anothe
 - **Why:** An identical replay must return the stored result, and a reused key with a changed JSON value must fail even if new fields would also be invalid.
 - **Sentence to add:** “After successful JSON parsing, check any existing idempotency record before validating body fields or checking menu-item existence; an identical completed request is replayed without revalidation.”
 
-### A4 — Order-line duplicates (§§3, 4.2)
+#### A4 — Order-line duplicates (§§3, 4.2)
 
 - **Reading A:** Multiple lines referring to the same menu item should be merged into a single line with the summed quantity.
 - **Reading B:** Multiple lines remain separate and in the original order because the contract has no uniqueness constraint.
@@ -172,7 +190,7 @@ For each, cite the relevant contract rule, the agent's actual choice, why anothe
 - **Why:** The resource section explicitly preserves client line order and calculates totals over all lines; merging would silently change the response shape.
 - **Sentence to add:** “Repeated `menuItemId` values are permitted in different order lines and must not be consolidated or reordered.”
 
-### A5 — Validation error enumeration (§§2, 4.2)
+#### A5 — Validation error enumeration (§§2, 4.2)
 
 - **Reading A:** Return one error for the first invalid field, or one summary error for each category.
 - **Reading B:** Collect a separate entry for each invalid field that can be identified from the parsed input, using precise JSON Pointers.
@@ -180,7 +198,7 @@ For each, cite the relevant contract rule, the agent's actual choice, why anothe
 - **Why:** The contract requires an entry for every problem found, not just the first. If a container such as `items` is not an array, it is not meaningful to invent errors for nonexistent child paths.
 - **Sentence to add:** “Report one `errors` entry for each independently invalid field that can be evaluated; when a parent field has the wrong type, report that parent rather than hypothetical missing descendants.”
 
-### A6 — Missing/invalid path ID and unknown method (§§2, 4.1, 4.3)
+#### A6 — Missing/invalid path ID and unknown method (§§2, 4.1, 4.3)
 
 - **Reading A:** An invalid path ID produces `400 validation`; an unsupported method on an otherwise known `/v1` path produces `405`.
 - **Reading B:** A missing or non-positive-integer resource ID produces `404 not-found`, and a `/v1` route not specified by the contract also uses the specified `404` problem response.
@@ -188,7 +206,7 @@ For each, cite the relevant contract rule, the agent's actual choice, why anothe
 - **Why:** The contract directly equates invalid resource IDs with not found, but does not fully describe route-method mismatches.
 - **Sentence to add:** “An invalid `{id}` always returns a `404 not-found` problem; unsupported methods on `/v1` endpoints return [explicitly choose `404` or `405` and define the body].”
 
-### A7 — Cursor value and filter binding (§4.4)
+#### A7 — Cursor value and filter binding (§4.4)
 
 - **Reading A:** A syntactically readable cursor can be reused with any `tableId`; the server applies the new filter.
 - **Reading B:** The cursor is tied to the original filter; using it with a different `tableId` is invalid.
@@ -196,7 +214,7 @@ For each, cite the relevant contract rule, the agent's actual choice, why anothe
 - **Why:** The text directs clients to use a cursor with the same `tableId`. Reusing a position from a different filtered list can skip rows or violate stable traversal.
 - **Sentence to add:** “A cursor is bound to the `tableId` filter used when it was issued; a different filter or an unreadable cursor returns `400 validation` with `parameter: cursor`.”
 
-### A8 — Cursor snapshot, insertion and last-page behavior (§4.4)
+#### A8 — Cursor snapshot, insertion and last-page behavior (§4.4)
 
 - **Reading A:** Any cursor that fetches older IDs is good enough; new orders may still affect the page boundary or be visible to later pages.
 - **Reading B:** The page walk retains a fixed initial upper bound and an advancing position, so new orders do not appear and old orders are not duplicated or skipped.
@@ -204,7 +222,7 @@ For each, cite the relevant contract rule, the agent's actual choice, why anothe
 - **Why:** The “pages do not move” rule and the `null`-if-and-only-if-no-more rule are stronger than a simple offset or naive next-page token.
 - **Sentence to add:** “Each `nextCursor` must preserve the first page's maximum visible order ID, the last returned position, and the original filter; return `null` when no matching orders remain beyond that position.”
 
-### A9 — Multiple occurrences of one query parameter (§4.4)
+#### A9 — Multiple occurrences of one query parameter (§4.4)
 
 - **Reading A:** For `?limit=10&limit=20`, silently use the first value or the last value.
 - **Reading B:** Reject repeated scalar pagination/filter parameters as ambiguous input.
@@ -212,7 +230,7 @@ For each, cite the relevant contract rule, the agent's actual choice, why anothe
 - **Why:** The specification describes one integer value for each parameter, but it does not say how duplicate query keys are handled. Silent selection can depend on framework behavior.
 - **Sentence to add:** “Each of `tableId`, `limit`, and `cursor` may occur at most once; repeated occurrences return `400 validation` naming that parameter.”
 
-### A10 — Header value length and whitespace (§4.2)
+#### A10 — Header value length and whitespace (§4.2)
 
 - **Reading A:** Measure the `Idempotency-Key` using UTF-8 bytes and treat surrounding whitespace as part of the key.
 - **Reading B:** Measure character count and normalize HTTP header optional whitespace before testing length or emptiness.
@@ -220,7 +238,7 @@ For each, cite the relevant contract rule, the agent's actual choice, why anothe
 - **Why:** JavaScript UTF-16 units, Unicode code points and UTF-8 bytes can differ; HTTP libraries also normalize whitespace differently.
 - **Sentence to add:** “Validate the key after removing HTTP optional whitespace surrounding its field value, count Unicode code points for the 1–255-character limit, and reject a resulting empty value.”
 
-### A11 — Persistent replay across process restarts (§4.2)
+#### A11 — Persistent replay across process restarts (§4.2)
 
 - **Reading A:** Keeping completed keys in an in-memory map is enough for retries while one process remains alive.
 - **Reading B:** Completed keys and the exact successful response must be stored durably with the order and remain usable for at least 24 hours, across restarts and multiple instances sharing the database.
@@ -228,7 +246,7 @@ For each, cite the relevant contract rule, the agent's actual choice, why anothe
 - **Why:** The contract requires storing the key/fingerprint/response in the same transaction as the order. An in-memory-only cache is neither part of that transaction nor durable for 24 hours.
 - **Sentence to add:** “A successfully completed key, its canonical request fingerprint, and its exact `201` response must be committed atomically with the order in durable shared storage and replayable for at least 24 hours across process restarts.”
 
-### A12 — Legacy deprecation and successor headers (§5)
+#### A12 — Legacy deprecation and successor headers (§5)
 
 - **Reading A:** `Deprecation` and `Sunset` are attached only to successful legacy responses, and `Link` may be attached to all `/menu/{id}` responses.
 - **Reading B:** Both lifecycle headers appear on **every** legacy response, including errors; the successor `Link` appears specifically on successful `GET /menu/{id}`.
@@ -236,7 +254,7 @@ For each, cite the relevant contract rule, the agent's actual choice, why anothe
 - **Why:** Section 5 explicitly mentions errors for the first two headers and limits the successor header to a successful response from that endpoint.
 - **Sentence to add:** “Attach `Deprecation` and `Sunset` to every response from a legacy route, regardless of status; attach the successor-version `Link` only to `200 GET /menu/{id}`.”
 
-### A13 — `errors` field on problem responses (§2)
+#### A13 — `errors` field on problem responses (§2)
 
 - **Reading A:** Include `errors: []` on every error response, regardless of problem type.
 - **Reading B:** Include `errors` only for `validation` and `unknown-menu-item`, with one entry for every problem actually identified.
@@ -244,7 +262,7 @@ For each, cite the relevant contract rule, the agent's actual choice, why anothe
 - **Why:** The member table restricts `errors` to those two problem types. Other failures use `type`, `title`, `status`, and occurrence-specific or generic `detail` as specified.
 - **Sentence to add:** “Omit the `errors` member on all problem types except `validation` and `unknown-menu-item`; for those two types, include one entry per detected problem.”
 
-### A14 — Historical unit prices versus current menu prices (§3)
+#### A14 — Historical unit prices versus current menu prices (§3)
 
 - **Reading A:** The server derives `unitPriceVnd` and `totalVnd` from the current menu table every time an existing order is retrieved.
 - **Reading B:** Save the unit price at creation and derive the order total from those stored order-line amounts, even if the legacy API later changes menu prices.
@@ -252,11 +270,82 @@ For each, cite the relevant contract rule, the agent's actual choice, why anothe
 - **Why:** The contract explicitly freezes each line's unit price at the time of placing the order.
 - **Sentence to add:** “Persist each order line's original `unitPriceVnd`; later menu price updates must not change an existing order's lines or `totalVnd`.”
 
+### 5.2 Implementing agent's actual answer
+
+> Which sentences of CONTRACT.md could be read two ways, and what did you choose for each?
+
+**Answer by Codex, 12 November 2026:** I identified the following plausible alternative readings or unspecified consequences. My choices describe the first implementation, not a proposed code change. Explicit requirements such as key-before-field validation, historical prices and stable pages are not ambiguities merely because an implementation could get them wrong.
+
+#### R1 — Ignoring unknown fields versus comparing entire JSON bodies (§§1, 4.2)
+
+- **Sentences:** “The server ignores request fields it does not know”; “Two bodies are the same when they are equal as JSON values”.
+- **Reading A:** Remove unknown fields before both order processing and idempotency comparison.
+- **Reading B:** Ignore them for order construction but retain them for whole-JSON equality.
+- **My actual choice:** **B**, because §4.2 specifically defines equality; `canonical` includes all parsed object members (`src/v1.js`, lines 28–34, 123). See S1 for evidence limits.
+
+#### R2 — Content-Type requirement and the ordered checks (§4.2)
+
+- **Sentence:** “Request headers: `Content-Type: application/json` and `Idempotency-Key`”, read alongside the numbered validation sequence.
+- **Reading A:** Reject a missing or non-JSON media type, despite the omitted failure step/status.
+- **Reading B:** Apply the stated key and JSON checks without adding a separate media-type error.
+- **My actual choice:** **B**: parse the body without inspecting Content-Type (`src/v1.js`, lines 103–128). The consequence for a missing/different header is underspecified. See S2.
+
+#### R3 — Consequence of a readable cursor with a changed filter (§4.4)
+
+- **Sentence:** “Use a cursor with the same `tableId` it came from.”
+- **Reading A:** This constrains the client only; the server's mismatch response is unspecified.
+- **Reading B:** Treat a readable cursor with another filter as invalid input.
+- **My actual choice:** **B**, using `400 validation` and `parameter: cursor`; I bind the stored cursor to its original filter (`src/v1.js`, lines 194–201). The status for this specific mismatch is an interpretation. See S3.
+
+#### R4 — Repeated occurrences of query parameters (§4.4)
+
+- **Sentence/table entry:** “Query parameters, all optional”, followed by one scalar rule each for `tableId`, `limit` and `cursor`.
+- **Reading A:** Multiple occurrences may be accepted by selecting one value.
+- **Reading B:** The scalar parameter may occur only once; repetitions are invalid.
+- **My actual choice:** **B**, to avoid silently choosing between values; `getAll(name).length !== 1` reports `validation` for the named parameter (`src/v1.js`, lines 181–200). The contract does not explicitly state parameter multiplicity; the first-run output does not establish this case's coverage.
+
+#### R5 — Error pointer for a non-object order line (§§2, 4.2)
+
+- **Sentences:** Section 2 requires one entry “per problem found”; §4.2 lists the fields `items[i].menuItemId` and `items[i].qty` and requires every broken field to be listed.
+- **Reading A:** A non-object line represents two missing/invalid child fields, so report both child pointers.
+- **Reading B:** Report the invalid parent line once, because child-field validation cannot meaningfully proceed on a non-object.
+- **My actual choice:** **B**: return a single `/items/{i}` error for that line and continue validating other lines (`src/v1.js`, lines 48–58). The parent-versus-children reporting granularity is not specified. The passing general validation test does not reveal whether it exercised this case.
+
+#### R6 — Unsupported methods on otherwise known paths (§§2, 4.1–4.4)
+
+- **Sentence:** Section 2 assigns `not-found` to “no such `/v1` path”, while §4 lists specific method/path pairs.
+- **Reading A:** A known path with an unsupported method needs a separate method-not-allowed response, whose problem slug/status the contract does not define.
+- **Reading B:** A request outside the specified method/path pairs uses the existing `404 not-found` response.
+- **My actual choice:** **B**, through the fallback in `handleV1` (`src/v1.js`, lines 219–239), to use the defined error vocabulary. This concerns method mismatches; invalid resource IDs are explicitly `404` and are not an unresolved choice. The unknown-path test's name does not establish unsupported-method coverage.
+
+#### R7 — Meaning of key length in characters (§4.2)
+
+- **Sentence:** The key is “a string of 1 to 255 characters”.
+- **Reading A:** Count Unicode code points in the string received by the application.
+- **Reading B:** Count encoded bytes or JavaScript UTF-16 units.
+- **My actual choice:** **A**, using `[...key].length` for the upper bound (`src/v1.js`, lines 104–106). The handler does not explicitly trim the key; it uses the header value supplied by Node. This is narrower than historical candidate A10's proposed whitespace normalization. Character units and whitespace treatment are not fully specified, and the first-run output does not establish Unicode boundary coverage.
+
+**Evidence boundary:** All seven choices are source-confirmed in `4c49c10`. The preserved suite reports 29/29 overall; it does not enumerate requests/assertions for these specific edge cases. No new experiments were run to expand that evidence.
+
+### 5.3 Student's final interpretation decisions — pending student work
+
+The following fields must be completed by the student after independently reviewing the agent's answer. No agreement with the agent, personal reason or final clarification sentence is supplied here on the student's behalf.
+
+| Agent case | Student's own two readings | Student's chosen reading | Student's reason | Student's proposed future clarification sentence |
+|---|---|---|---|---|
+| R1 | PENDING — student | PENDING — student | PENDING — student | PENDING — student |
+| R2 | PENDING — student | PENDING — student | PENDING — student | PENDING — student |
+| R3 | PENDING — student | PENDING — student | PENDING — student | PENDING — student |
+| R4 | PENDING — student | PENDING — student | PENDING — student | PENDING — student |
+| R5 | PENDING — student | PENDING — student | PENDING — student | PENDING — student |
+| R6 | PENDING — student | PENDING — student | PENDING — student | PENDING — student |
+| R7 | PENDING — student | PENDING — student | PENDING — student | PENDING — student |
+
 ## 6. Student-discovered ambiguity — separate evidence requirement
 
 **Status:** NOT PROVIDED BY THE STUDENT.
 
-The fourteen cases in Section 5 are working candidates. **None establishes a separate student-only discovery merely by being copied into this section.** After asking the implementing agent the specified question, the student should independently identify at least one **additional** point absent from that agent's response. Do not preselect or falsely attribute it.
+Section 5.1 preserves historical candidates, and Section 5.2 is the implementing agent's actual answer. **Neither establishes a separate student-only discovery merely by being copied into this section.** The student must independently identify at least one additional point absent from the actual agent response, and record its provenance honestly. No independent ambiguity has been supplied or preselected by the agent.
 
 Use this exact structure for the authentic entry:
 
@@ -292,10 +381,10 @@ These are review risks, **not claims that the code fails them**.
 
 - **Prediction 1:** NOT VERIFIED. `[CONFIRMED / NOT CONFIRMED; EXACT TEST NAME AND SHA]`
 - **Prediction 2:** NOT VERIFIED. `[CONFIRMED / NOT CONFIRMED; EXACT TEST NAME AND SHA]`
-- **First contract run:** NOT VERIFIED. `[X/29; REFERENCE TO contract-run-1.txt COMMIT]`
+- **First contract run:** PASS 29/29, zero failures; `contract-run-1.txt` commit `486588a`. Criterion 4 special-case assumptions documented in Section 4.3; not a final verification run.
 - **Final legacy test run:** NOT VERIFIED. `[X/3; NODE VERSION AND COMMAND]`
 - **Final contract test run:** NOT VERIFIED. `[X/29; REFERENCE TO contract-run-final.txt]`
-- **Implementing agent's actual ambiguity answer:** NOT PROVIDED. `[DATE, TOOL, EXACT ANSWER OR FAITHFUL SUMMARY]`
+- **Implementing agent's actual ambiguity answer:** Recorded on 12 November 2026, Codex, Section 5.2. Student decisions remain pending in Section 5.3.
 - **Student's independent ambiguity:** NOT PROVIDED. `[SECTION 6 EVIDENCE]`
 - **Remaining uncertainty after fixes:** `[REAL OBSERVATIONS ONLY]`
 
@@ -306,8 +395,8 @@ Before treating this document as a submission artifact, ensure all boxes are sup
 - [x] Personally read `CONTRACT.md` for ten minutes without AI and independently select two predictions with reasons (student confirmation in this session).
 - [x] Commit those student predictions **before** an agent edits `src/` (`fc96aaa`; sequence verified from Git).
 - [x] Save the agent's first implementation in a distinct commit (`4c49c10`).
-- [ ] Capture and commit the unmodified first `npm run contract 2>&1 | tee contract-run-1.txt` before repairs.
-- [ ] Replace Section 4's evidence placeholders with a separate, evidence-based entry for every failed first-run test (or the three documented guesses if the first run passes 29/29).
+- [x] Capture and commit the first contract-run evidence before repairs (`486588a`; file unchanged on inspection; student confirms this is the first run).
+- [x] Replace Section 4's failure placeholders using the 29/29 special case: three actual assumptions in Section 4.3.
 - [ ] Use only failing test names and contract section references in repair prompts; record exact prompts in `AI-LOG.md`.
 - [ ] Ask the implementing agent the exact ambiguity question, preserve its actual answer, and record the student's explicit decisions with improved sentences.
 - [ ] Add at least one genuinely independent student ambiguity not listed by the implementing agent.

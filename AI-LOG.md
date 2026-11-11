@@ -69,6 +69,76 @@ Exit status 0; tests 3, pass 3, fail 0. Raw output is preserved in the linked re
 
 **Evidence and checkpoint:** Documentation synchronization commit `5d614da`; distinct first implementation commit `4c49c10`, after prediction commit `fc96aaa`. Gate 1 is stopped. The next human-controlled action is Gate 2's first contract run and immutable evidence commit, before any repairs.
 
+## 2026-11-12 — Read-only analysis of the committed first contract run
+
+**Tool:** Codex (model version not independently verified).
+
+**Exact user prompt:**
+
+```text
+Gate 2 first-run evidence has been captured and committed in contract-run-1.txt.\
+\
+Read the first-run output and analyze every failed contract test against the relevant sections of CONTRACT.md.\
+\
+For each failure, identify:\
+1\. The exact test name.\
+2\. The relevant contract section and required behavior.\
+3\. What the first implementation did differently.\
+4\. Whether the contract wording is ambiguous.\
+\
+Do not read or modify test/ or CONTRACT.md.\
+Do not modify src/ or migrations/ yet.\
+Do not overwrite or rerun contract-run-1.txt.\
+\
+Report the analysis and stop before implementation fixes.
+```
+
+**Actions and evidence:** Verified first-run evidence commit `486588a3be8f22d4f91594628e63ef189a6d7a55`, read the preserved output, and compared the contract and first implementation. The log reports 29 tests passed and zero failed. Read-only comparisons showed that the log matched its evidence commit, source/migrations matched `4c49c10`, and the contract matched the starter. Reported that there were no failing test names or observed failure differences to analyze. Identified three actual assumptions: whole-JSON comparison includes unknown fields, no separate Content-Type rejection, and cursor/filter mismatch returns validation.
+
+**Kept:** Preserved first-run evidence and first implementation; no repair request was inferred from the passing run.
+
+**Changed:** None in that analysis turn; no repository edits or tests were performed. The three assumptions were reported in the conversation.
+
+**Rejected:** None. No student rejection is claimed.
+
+**By hand:** The student states that the first contract run was captured and committed. Git confirms the evidence commit and its contents; unaided activities are not independently observable by the agent.
+
+## 2026-11-12 — Criterion 4 special case and actual agent ambiguity answer
+
+**Tool:** Codex (model version not independently verified).
+
+**Exact user prompt:**
+
+```text
+The preserved first contract run passed 29/29 tests with zero failures.\
+\
+Proceed with the rubric's special case for criterion 4. Document the three implementation assumptions already identified, referencing the relevant sections of CONTRACT.md and the actual implementation decisions.\
+\
+Then answer exactly: "Which sentences of CONTRACT.md could be read two ways, and what did you choose for each?"\
+\
+Record your interpretations separately from the student's final decisions. Leave the student's independent ambiguity and final interpretation decisions for the student to complete.\
+\
+Update AI-LOG.md with the actual prompts and actions. Do not invent Changed or Rejected decisions.\
+\
+Do not edit src/, migrations/, test/, CONTRACT.md, or contract-run-1.txt. Do not rerun tests. Stop after the documentation update.
+```
+
+**Exact rubric question answered:**
+
+> Which sentences of CONTRACT.md could be read two ways, and what did you choose for each?
+
+**Actions:** Updated `NOTES.md` Section 4 with the actual first-run evidence and the three previously identified assumptions, each tied to contract sections, actual source decisions and evidence limits. Recorded the agent's current answer in Section 5.2 with seven cases: unknown fields in equality, Content-Type, cursor/filter mismatch, repeated query parameters, non-object line error pointers, unsupported methods and key-length character units. Preserved the fourteen earlier candidates as historical material in Section 5.1. Created an explicitly unfilled student decision worksheet in Section 5.3 and left the independent ambiguity in Section 6 pending. Updated only current checkpoint/evidence references in README, the runbook and the report; no score claims or final verification claims were filled.
+
+**Kept:** The same first implementation and immutable 29/29 first-run evidence; original prediction text and reasons; historical worksheet candidates with their original provisional status. The three assumptions are agent-authored analysis, not student approvals.
+
+**Changed:** Documentation status previously said that the first-run log and actual agent answer were unavailable. Replaced those stale fields with committed evidence and the answer now provided. Replaced unused failure-record placeholders with an explicit zero-failure finding and the rubric's three-assumption analysis. The actual answer distinguishes code behavior from historical proposals: the handler counts code points but does not explicitly trim the key, and ignores Content-Type even beyond parameterized JSON media types. These are documentation corrections based on source, not code changes or student reinterpretations.
+
+**Rejected:** None. No proposal was rejected by the student, and no rejection was invented for the rubric.
+
+**By hand:** No final student interpretation, personal justification, clarification sentence or independently discovered ambiguity has been supplied in this documentation turn. Those remain for the student to complete.
+
+**Validation and limits:** Inspected documentation diffs and whitespace only; no tests, migrations or API experiments were run. No test source was inspected. No edits were made to `src/`, migrations, `CONTRACT.md` or `contract-run-1.txt`. The pass count comes solely from preserved evidence commit `486588a`; source-confirmed edge cases are not presented as individually tested. No repair prompts or fix commits exist for this run. Stopped after documentation; Gate 4 human decisions and Gate 5 verification remain pending.
+
 ## Future AI interaction entries — fill as work happens
 
 For every later agent interaction, add a separate entry (or an explicitly ordered prompt record):
