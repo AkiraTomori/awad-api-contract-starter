@@ -389,7 +389,7 @@ The following decisions compare each reading with the wording of `CONTRACT.md`. 
 
 ## 6. Additional ambiguity outside R1–R7 — unknown query parameters
 
-This case is distinct from R1–R7 in §5.2. If the submission requires independently discovered ambiguities, that requirement must be verified separately.
+This case is distinct from R1–R7 in §5.2. **Independent discovery (student-confirmed, 12 November 2026):** I identified the ambiguity about unknown query-parameter names myself while reviewing the contract, then checked that it was absent from the implementing agent's R1–R7 answer. This provenance is recorded from my own confirmation; it is not presented as independently observable tool evidence.
 
 - **Contract section and sentence:** §1: “The server ignores request fields it does not know.” §4.4: “Query parameters, all optional”, followed by the rules for `tableId`, `limit` and `cursor`; “A value outside these rules is `400 validation` with `parameter` set to its name.”
 - **Reading 1:** Unknown query parameters such as `?debug=true` are ignored. The validation rules apply to the three **known** query parameters, while §1 favors tolerance of unknown request data.
@@ -427,7 +427,7 @@ These are review risks, **not claims that the code fails them**.
 - **Final legacy test run:** NOT VERIFIED. `[X/3; NODE VERSION AND COMMAND]`
 - **Final contract test run:** NOT VERIFIED. `[X/29; REFERENCE TO contract-run-final.txt]`
 - **Implementing agent's ambiguity answer:** Recorded on 12 November 2026, Codex, §5.2. Seven selected readings, reasons and proposed clarifications appear in §5.3.
-- **Additional ambiguity outside R1–R7:** §6 addresses unknown query-parameter names, presents two readings and proposes a clarification. Independent discovery is not established by this record.
+- **Additional ambiguity outside R1–R7:** §6 addresses unknown query-parameter names, presents two readings and proposes a clarification. The student has confirmed this was their own independent finding, absent from the agent's R1–R7 list.
 - **Remaining uncertainty after fixes:** `[REAL OBSERVATIONS ONLY]`
 
 ## 8. Submission and evidence cross-check
@@ -441,7 +441,7 @@ Before treating this document as a submission artifact, ensure all boxes are sup
 - [x] Replace Section 4's failure placeholders using the 29/29 special case: three actual assumptions in Section 4.3.
 - [ ] Use only failing test names and contract section references in repair prompts; record exact prompts in `AI-LOG.md`.
 - [x] Ask the implementing agent the exact ambiguity question and preserve its actual answer; §5.3 contains seven decisions, reasons and clarification sentences.
-- [ ] If independent discovery is required for the additional ambiguity, confirm this requirement separately; §6 currently supplies a distinct example but not evidence of its discovery process.
+- [x] Document an additional ambiguity independently found by the student: §6 covers unknown query-parameter names, with student-confirmed provenance and a comparison against the agent's R1–R7 answer.
 - [ ] Preserve `test/` and `CONTRACT.md`; create new tables only in paired `migrations/002_*.up.sql` and `.down.sql` files.
 - [ ] Verify Node >= 22.13, migrations, seed, legacy tests, and contract tests; save `contract-run-final.txt`.
 - [ ] Fill `SELF_ASSESSMENT_REPORT.md` with six evidence-backed scores and a truthful total.
