@@ -46,6 +46,29 @@ This is an honest, evolving record of AI assistance. Entries distinguish histori
 
 **Evidence:** Prediction commit `fc96aaa5fa00023e57f888819984ef80a516ad5a`, dated 12 November 2026 at 00:07:38 +07:00. Before implementation, `git log -- src/` showed only starter commit `6f7bf05`; the starter-to-HEAD diff for `src/` and migrations was empty. The existing `.gitignore` change belongs to the user and is excluded from agent commits. Gate 1 results will be recorded after execution.
 
+## 2026-11-12 — Gate 1 first implementation and legacy verification
+
+**Tool:** Codex; Node v26.6.0. Used the exact initial README prompt and follow-up authorization recorded above; no repair prompt was received or acted on.
+
+**Kept (agent implementation; student review pending):** `/v1` menu retrieval, order creation/retrieval/listing and problem details in `src/v1.js`; transactional persistence of completed idempotency results; recursive JSON fingerprinting; preserved order-line prices and positions; durable opaque cursors bound to their original filter and first-page upper bound. The migration retains completed keys and cursors indefinitely. No dependencies added.
+
+**Changed:** Replaced the versioned-handler stub and added only section 5 lifecycle/successor headers to legacy responses in `src/app.js`. Added `002_v1_state.up.sql` and matching `down` for the two supporting tables. Updated current checkpoint documentation and corrected stale report references; historical planning entries and the student's prediction text remain intact. No source fixes followed the legacy test run.
+
+**Rejected:** None. No student rejection or review decision is claimed.
+
+**By hand:** Student confirmed the pre-agent reading and prediction authorship. No student implementation edits, contract-failure diagnosis or final ambiguity decisions are claimed for this gate.
+
+**Observed verification:** `node --version` returned `v26.6.0`. Executed exactly:
+
+```bash
+set -o pipefail
+npm test 2>&1 | tee docs/gate-1-legacy-test.txt
+```
+
+Exit status 0; tests 3, pass 3, fail 0. Raw output is preserved in the linked repository file. Whitespace validation of the source changes also passed. The agent did not inspect any test source, modify the contract, run contract tests, perform separate migration up/down validation or start post-first-run fixes. Active-request tracking is connection-local; simultaneous in-flight behavior across independent processes is not verified by the legacy suite. No contract pass count is claimed.
+
+**Evidence and checkpoint:** Documentation synchronization commit `5d614da`; distinct first implementation commit `4c49c10`, after prediction commit `fc96aaa`. Gate 1 is stopped. The next human-controlled action is Gate 2's first contract run and immutable evidence commit, before any repairs.
+
 ## Future AI interaction entries — fill as work happens
 
 For every later agent interaction, add a separate entry (or an explicitly ordered prompt record):

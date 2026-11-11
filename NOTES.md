@@ -8,7 +8,7 @@
 
 **Date:** 11 November 2026
 
-**Status:** Gate 0 complete; Gate 1 authorized on 12 November 2026. Implementation and test results remain pending.
+**Status:** Gate 0 complete; Gate 1 first implementation committed as `4c49c10`, with legacy tests PASS 3/3 on Node v26.6.0. Stopped before Gate 2; contract behavior and prediction outcomes remain unverified.
 
 > **Evidence note:** The student confirmed in this session that the required independent reading and the two predictions were completed before implementation. Git verifies the predictions in `fc96aaa5fa00023e57f888819984ef80a516ad5a`, before any agent source changes. The agent cannot independently observe the unaided reading; prediction outcomes and contract interpretations still require later evidence.
 
@@ -42,7 +42,7 @@ The assignment separates three questions: **what the contract requires**, **what
 |---|---|---|
 | Contract and rubric review | Student confirms required unaided reading complete; agent did not observe it | Student's own contract reading |
 | Two pre-agent predictions | Section 1 predictions committed in `fc96aaa`; independence confirmed by student | Outcomes await first-run evidence |
-| First implementation commit | Not verified | Actual Git SHA, before the first contract run |
+| First implementation commit | `4c49c10`; legacy tests PASS 3/3, log in `docs/gate-1-legacy-test.txt` | Preserved before the first contract run |
 | `contract-run-1.txt` | Not available in the inspected repository state | Preserve the **first** post-implementation run and commit it before fixes |
 | First-run failures | Unknown | One evidence-based entry **for every failed test** |
 | Implementing agent's ambiguity response | Not yet observed | Ask the exact rubric question and preserve the actual answer |
@@ -79,7 +79,7 @@ The unchanged legacy API, frozen specification, migration rules, and evidence or
 
 ## 4. First-run analysis — required evidence, not hypothetical failures
 
-**First implementation commit:** NOT PROVIDED
+**First implementation commit:** `4c49c10` — `feat: initial agent implementation of v1`. Gate 1 ran only `npm test`: PASS 3/3 on Node v26.6.0; output preserved in `docs/gate-1-legacy-test.txt`. No contract tests or subsequent source fixes were run. Migration up/down execution was not separately verified during Gate 1.
 
 **First-run evidence commit:** NOT PROVIDED
 
@@ -305,7 +305,7 @@ Before treating this document as a submission artifact, ensure all boxes are sup
 
 - [x] Personally read `CONTRACT.md` for ten minutes without AI and independently select two predictions with reasons (student confirmation in this session).
 - [x] Commit those student predictions **before** an agent edits `src/` (`fc96aaa`; sequence verified from Git).
-- [ ] Save the agent's first implementation in a distinct commit.
+- [x] Save the agent's first implementation in a distinct commit (`4c49c10`).
 - [ ] Capture and commit the unmodified first `npm run contract 2>&1 | tee contract-run-1.txt` before repairs.
 - [ ] Replace Section 4's evidence placeholders with a separate, evidence-based entry for every failed first-run test (or the three documented guesses if the first run passes 29/29).
 - [ ] Use only failing test names and contract section references in repair prompts; record exact prompts in `AI-LOG.md`.

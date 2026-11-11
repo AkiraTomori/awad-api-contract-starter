@@ -6,8 +6,11 @@ The `smart-restaurant` menu service again, as it looks after IA#2: money is an
 integer number of dong. Node 22.13+, no dependencies — SQLite through the
 built-in `node:sqlite`.
 
-The service still has only its **legacy** API (`/menu…`). Your job today is the
-new, versioned API under `/v1`, and the contract for it is already written:
+The starter provided only its **legacy** API (`/menu…`). The first `/v1`
+implementation is now preserved in commit `4c49c10`; Gate 1 legacy tests pass
+3/3 on Node v26.6.0 (`docs/gate-1-legacy-test.txt`). Contract tests have not
+been run for this implementation; the next checkpoint is the student's Gate 2
+first-run capture. The contract for the versioned API is:
 **[`CONTRACT.md`](CONTRACT.md)**. You do not write the implementation by hand —
 your agent does, from the contract. Then `npm run contract` decides whether it
 did what the contract says.
@@ -25,7 +28,7 @@ npm run contract         # CONTRACT.md, checked over HTTP: all red until /v1 exi
 | Path | What it is |
 |---|---|
 | `CONTRACT.md` | the specification of `/v1`. **Read it before you prompt anything** |
-| `src/v1.js` | an empty stub — the `/v1` implementation goes here |
+| `src/v1.js` | first `/v1` implementation; contract verification pending |
 | `src/app.js` | the legacy API, and the place where `/v1` is plugged in |
 | `migrations/` | `001_init` is the schema. A new table is a new `002_….up.sql` + `.down.sql` |
 | `test/legacy.test.js` | what old clients rely on |

@@ -3,7 +3,7 @@
 **Course:** CSC13114 — Advanced Web Application Development  
 **Assignment:** IA#3, individual, 100 points (2% of course)  
 **Deadline:** Thursday, 12 November 2026, 22:00 (Vietnam time)  
-**Status:** Gate 0 complete: predictions committed in `fc96aaa`, with independent reading and authorship confirmed by the student on 12 November 2026. Gate 1 is authorized; stop after the first implementation and legacy tests. Contract runs, repairs, ambiguity decisions and final assessment remain pending.
+**Status:** Gate 0 complete: predictions committed in `fc96aaa`, with independent reading and authorship confirmed by the student on 12 November 2026. Gate 1 complete: first implementation `4c49c10`; `npm test` PASS 3/3 on Node v26.6.0, captured in `docs/gate-1-legacy-test.txt`. Stopped before Gate 2. Contract runs, repairs, ambiguity decisions and final assessment remain pending.
 
 > The deadline in `README.md` is synchronized with this runbook and `AGENTS.md`. The latest Classroom rubric remains authoritative.
 
